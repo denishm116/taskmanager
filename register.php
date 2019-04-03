@@ -9,34 +9,29 @@ $password = $_POST['password'];
 
 
     //Проверка полей формы на пустоту
-
     if (empty($name) || empty($email) || empty($password)) {
-    echo "Заполните форму";
-    die;
+        header('Refresh: 3; url=register-form.php');
+        echo "Заполните форму";
+    exit;
     }
 
     //Шифрование праоля
-
     $pass = md5($password);
 
     // Соединение с БД
-
     $pdo = new PDO('mysql:host=localhost;dbname=taskmgr', 'root', '');
 
     //Выборка из БД для провелки логина
-
     $sql1 = "SELECT username FROM users";
     $statement1 = $pdo->prepare($sql1);
     $array1 = $statement1->execute();
     $array1 = $statement1->fetchAll(PDO::FETCH_ASSOC);
 
     //Переборка массива для проверки на наличие пользователя с таким именем
-
     foreach ($array1 as $arr) {
         foreach ($arr as $a) {
 
             //Если такой пользователь существует, сообщение об этом и редирект на форму регистрации
-
             if ($a == $name) {
                 header('Refresh: 3; url=register-form.php');
                 echo "Пользователь существует";
