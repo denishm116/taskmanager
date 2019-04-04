@@ -11,7 +11,7 @@ $password = $_POST['password'];
     //Проверка полей формы на пустоту
     if (empty($name) || empty($email) || empty($password)) {
         header('Refresh: 3; url=register-form.php');
-        echo "Заполните форму";
+        echo "Заполните все поля формы";
     exit;
     }
 
@@ -22,21 +22,22 @@ $password = $_POST['password'];
     $pdo = new PDO('mysql:host=localhost;dbname=taskmgr', 'root', '');
 
     //Выборка из БД для провелки логина
-    $sql1 = "SELECT username FROM users";
+    $sql1 = "SELECT * FROM users";
     $statement1 = $pdo->prepare($sql1);
     $array1 = $statement1->execute();
     $array1 = $statement1->fetchAll(PDO::FETCH_ASSOC);
 
-    //Переборка массива для проверки на наличие пользователя с таким именем
+    //Переборка массива для проверки на наличие пользователя с таким именем и емаил
     foreach ($array1 as $arr) {
-        foreach ($arr as $a) {
-
-            //Если такой пользователь существует, сообщение об этом и редирект на форму регистрации
-            if ($a == $name) {
-                header('Refresh: 3; url=register-form.php');
-                echo "Пользователь существует";
-                exit;
-            }
+        if ($arr['username'] == $name) {
+            header('Refresh: 3; url=register-form.php');
+            echo "Пользователь с таким именем уже существует";
+            exit;
+        }
+        elseif ($arr['email'] == $email) {
+            header('Refresh: 3; url=register-form.php');
+            echo "Пользователь с таким E-mail уже существует";
+            exit;
         }
     }
 
