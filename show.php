@@ -5,7 +5,7 @@ session_start();
 
 $id = ($_GET['id']);
 
-$pdo = new PDO('mysql:host=localhost;dbname=taskmgr', 'root', '');
+require "db_connect.php";
 
 //Выборка из БД для провелки логина
 $sql = "SELECT * FROM tasks WHERE id = '$id'";

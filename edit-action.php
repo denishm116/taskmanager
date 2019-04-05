@@ -9,7 +9,7 @@ $description = ($_POST['description']);
 require "image-name.php";
 $filename = uploadImage($_FILES['image']);
 
-$pdo = new PDO('mysql:host=localhost;dbname=taskmgr', 'root', '');
+require "db_connect.php";
 
 //Строка для изменения записей в таблице задач
 $sql = "UPDATE tasks SET title = :title, description = :description, img = :img WHERE id = :id";

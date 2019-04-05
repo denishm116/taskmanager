@@ -19,7 +19,7 @@ $password = $_POST['password'];
     $pass = md5($password);
 
     // Соединение с БД
-    $pdo = new PDO('mysql:host=localhost;dbname=taskmgr', 'root', '');
+    require "db_connect.php";
 
     //Выборка из БД для провелки логина
     $sql1 = "SELECT * FROM users";

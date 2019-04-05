@@ -3,7 +3,7 @@ session_start();
 
 $userid = ($_SESSION['userid']);
 
-$pdo = new PDO('mysql:host=localhost;dbname=taskmgr', 'root', '');
+require "db_connect.php";
 
 //Выборка из БД для провелки логина
 $sql = "SELECT * FROM tasks WHERE userid = '$userid'";
@@ -37,7 +37,7 @@ $array = $statement->fetchAll(PDO::FETCH_ASSOC);
             <div class="col-sm-4 offset-md-1 py-4">
               <h4 class="text-white"><?php echo $_SESSION['email'] ?></h4>
               <ul class="list-unstyled">
-                <li><a href="#" class="text-white">Выйти</a></li>
+                <li><a href="exit.php" class="text-white">Выйти</a></li>
               </ul>
             </div>
           </div>

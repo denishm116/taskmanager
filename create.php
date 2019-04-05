@@ -12,7 +12,7 @@ require "image-name.php";
     $filename = uploadImage($_FILES['image']);
 
 //Записываем данные в БД
-$pdo = new PDO('mysql:host=localhost;dbname=taskmgr', 'root', '');
+require "db_connect.php";
 $sql = "INSERT INTO tasks (userid, title, short_description, description, img) VALUES (:userid, :title, :short_description, :description, :img)";
 $statement = $pdo->prepare($sql);
 $statement->bindValue(":userid", $userid);
