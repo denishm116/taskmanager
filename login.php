@@ -20,10 +20,12 @@ $array = $statement->fetchAll(PDO::FETCH_ASSOC);
 foreach ($array as $arr) {
     if ($arr['email'] == $email) {
         if ($arr['password'] == $pass) {
+            $_SESSION['email'] = $email;
+            $_SESSION['userid'] = $arr['id'];
+            $_SESSION['username'] = $arr['username'];
             header('Refresh: 1; url=list.php');
             echo "Добро пожаловать " . $arr['username'];
             //Записываем переменную е-маил в сессию, чтобы использовать ее на странице списка задач.
-            $_SESSION['email'] = $email;
 
             exit;
         }
