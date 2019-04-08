@@ -5,13 +5,25 @@ $id = ($_POST['id']);
 $title = ($_POST['title']);
 $description = ($_POST['description']);
 
+
+
 //Подключаемся к БД
 require "db_connect.php";
 
 //подключаем функцию для создания имени файла
-require "image-name.php";
+if ($_FILES['image']['name'] == '') {
+    $sql = "SELECT * FROM tasks WHERE id = '$id'";
+    $statement = $pdo->prepare($sql);
+    $array = $statement->execute();
+    $array = $statement->fetch(PDO::FETCH_ASSOC);
+    $filename = $array['img'];
+   
 
-$filename = uploadImage($_FILES['image']);
+} else {
+    require "image-name.php";
+    $filename = uploadImage($_FILES['image']);
+
+}
 
 //Строка для изменения записей в таблице задач
 

@@ -13,10 +13,12 @@ function taskList($pdo, $id)
     $sql = "SELECT * FROM tasks WHERE id = '$id'";
     $statement = $pdo->prepare($sql);
     $array = $statement->execute();
-    $array = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $array = $statement->fetch(PDO::FETCH_ASSOC);
+    return $array;
 }
 
-taskList($pdo, $id);
+$array = taskList($pdo, $id);
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -37,15 +39,15 @@ taskList($pdo, $id);
   <body>
     <div class="form-wrapper text-center">
       <form class="form-signin" method="post" action="/edit-action.php" enctype="multipart/form-data">
-          <input type="hidden" name="id" value="<?php echo $array[0]['id']; ?>">
+          <input type="hidden" name="id" value="<?php echo $array['id']; ?>">
         <img class="mb-4" src="/assets/img/bootstrap-solid.svg" alt="" width="72" height="72">
-        <h1 class="h3 mb-3 font-weight-normal">Изменить замись № <?php echo $array[0]['id']; ?></h1>
+        <h1 class="h3 mb-3 font-weight-normal">Изменить замись № <?php echo $array['id']; ?></h1>
         <label for="inputEmail" class="sr-only">Название</label>
-        <input type="text" name="title" id="inputEmail" class="form-control" placeholder="Название" required value="<?php echo $array[0]['title']; ?>">
+        <input type="text" name="title" id="inputEmail" class="form-control" placeholder="Название" required value="<?php echo $array['title']; ?>">
         <label for="inputEmail" class="sr-only">Описание</label>
-        <textarea name="description" class="form-control" cols="30" rows="10" placeholder="Описание"><?php echo $array[0]['description']; ?></textarea>
+        <textarea name="description" class="form-control" cols="30" rows="10" placeholder="Описание"><?php echo $array['description']; ?></textarea>
         <input type="file" name="image">
-        <img src="/uploads/<?php echo $array[0]['img']; ?>" alt="" width="300" class="mb-3">
+        <img src="/uploads/<?php echo $array['img']; ?>" alt="" width="300" class="mb-3">
         <button class="btn btn-lg btn-success btn-block" type="submit">Редактировать</button>
         <p class="mt-5 mb-3 text-muted">&copy; 2018-2019</p>
       </form>

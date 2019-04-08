@@ -15,9 +15,10 @@ function taskShow ($pdo, $id)
     $statement = $pdo->prepare($sql);
     $array = $statement->execute();
     $array = $statement->fetchAll(PDO::FETCH_ASSOC);
+    return $array;
 }
 
-taskShow($pdo, $id);
+$array = taskShow($pdo, $id);
 //echo $array['id'];
 //var_dump($array);
 ?>

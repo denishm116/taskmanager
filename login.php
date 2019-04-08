@@ -10,7 +10,7 @@ $pass = md5($password);
 require "db_connect.php";
 
 //Выборка из БД для провелки логина
-function allUsers()
+function allUsers($pdo)
 {
     $sql = "SELECT * FROM users";
     $statement = $pdo->prepare($sql);
@@ -19,25 +19,28 @@ function allUsers()
     return $array;
 }
 
+$allusers = allUsers($pdo);
 
 
 //Проверка имени и  парлоя и запись в сессию переменных
-function login($users)
+function login($allusers, $email, $pass)
 {
-    foreach (allUsers() as $arr) {
+    foreach ($allusers as $arr) {
         if ($arr['email'] == $email) {
             if ($arr['password'] == $pass) {
                 $_SESSION['email'] = $email;
                 $_SESSION['userid'] = $arr['id'];
                 $_SESSION['username'] = $arr['username'];
-                require "list.php";
-                exit;
+            require "list.php";
             }
         }
-    }
-}
-//Вызов функции проверки имени и  парлоя и запись в сессию переменных
-login(allUsers());
 
-header('Location: login-form.php');
+    }
+    var_dump(login($allusers));
+}
+
+//Вызов функции проверки имени и  парлоя и запись в сессию переменных
+login($allusers, $email, $pass);
+
+//require "list.php";
 //var_dump($pass);

@@ -12,8 +12,9 @@ function taskList ($pdo, $userid)
     $statement = $pdo->prepare($sql);
     $array = $statement->execute();
     $array = $statement->fetchAll(PDO::FETCH_ASSOC);
+    return $array;
 }
-taskList($pdo, $userid);
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -75,7 +76,7 @@ taskList($pdo, $userid);
         <div class="container">
 
           <div class="row">
-              <?php foreach ($array as $arr) { ?>
+              <?php foreach (taskList($pdo, $userid) as $arr) { ?>
              <div class="col-md-4">
               <div class="card mb-4 shadow-sm">
                 <img class="card-img-top" src="uploads/<?php echo  $arr['img']; ?>">
