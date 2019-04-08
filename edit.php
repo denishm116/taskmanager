@@ -5,14 +5,18 @@ session_start();
 
 $id = ($_GET['id']);
 
-$pdo = new PDO('mysql:host=localhost;dbname=taskmgr', 'root', '');
+require "db_connect.php";
 
-//Выборка из БД для провелки логина
-$sql = "SELECT * FROM tasks WHERE id = '$id'";
-$statement = $pdo->prepare($sql);
-$array = $statement->execute();
-$array = $statement->fetchAll(PDO::FETCH_ASSOC);
+//Выборка задач из списка
+function taskList($pdo, $id)
+{
+    $sql = "SELECT * FROM tasks WHERE id = '$id'";
+    $statement = $pdo->prepare($sql);
+    $array = $statement->execute();
+    $array = $statement->fetchAll(PDO::FETCH_ASSOC);
+}
 
+taskList($pdo, $id);
 ?>
 <!doctype html>
 <html lang="en">

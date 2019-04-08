@@ -5,12 +5,15 @@ $userid = ($_SESSION['userid']);
 
 require "db_connect.php";
 
-//Выборка из БД для провелки логина
-$sql = "SELECT * FROM tasks WHERE userid = '$userid'";
-$statement = $pdo->prepare($sql);
-$array = $statement->execute();
-$array = $statement->fetchAll(PDO::FETCH_ASSOC);
-
+//Список задач
+function taskList ($pdo, $userid)
+{
+    $sql = "SELECT * FROM tasks WHERE userid = '$userid'";
+    $statement = $pdo->prepare($sql);
+    $array = $statement->execute();
+    $array = $statement->fetchAll(PDO::FETCH_ASSOC);
+}
+taskList($pdo, $userid);
 ?>
 <!doctype html>
 <html lang="en">

@@ -8,10 +8,16 @@ $id = ($_GET['id']);
 require "db_connect.php";
 
 //Выборка из БД для провелки логина
-$sql = "SELECT * FROM tasks WHERE id = '$id'";
-$statement = $pdo->prepare($sql);
-$array = $statement->execute();
-$array = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+function taskShow ($pdo, $id)
+{
+    $sql = "SELECT * FROM tasks WHERE id = '$id'";
+    $statement = $pdo->prepare($sql);
+    $array = $statement->execute();
+    $array = $statement->fetchAll(PDO::FETCH_ASSOC);
+}
+
+taskShow($pdo, $id);
 //echo $array['id'];
 //var_dump($array);
 ?>
