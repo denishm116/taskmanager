@@ -1,22 +1,9 @@
 <?php
 session_start();
 
-
-
 $id = ($_GET['id']);
-
 require "db_connect.php";
-
-//Выборка задач из списка
-function taskList($pdo, $id)
-{
-    $sql = "SELECT * FROM tasks WHERE id = '$id'";
-    $statement = $pdo->prepare($sql);
-    $array = $statement->execute();
-    $array = $statement->fetch(PDO::FETCH_ASSOC);
-    return $array;
-}
-
+require "functions.php";
 $array = taskList($pdo, $id);
 
 ?>

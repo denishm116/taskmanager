@@ -1,41 +1,58 @@
 <?php
 session_start();
-
-$id = ($_POST['id']);
-$title = ($_POST['title']);
-$description = ($_POST['description']);
-
-
+$table = "tasks";
+$fn = $_FILES['image']['name'];
+$data = $_POST;
 
 //Подключаемся к БД
 require "db_connect.php";
+require "functions.php";
 
-//подключаем функцию для создания имени файла
-if ($_FILES['image']['name'] == '') {
-    $sql = "SELECT * FROM tasks WHERE id = '$id'";
-    $statement = $pdo->prepare($sql);
-    $array = $statement->execute();
-    $array = $statement->fetch(PDO::FETCH_ASSOC);
-    $filename = $array['img'];
-   
-
-} else {
-    require "image-name.php";
-    $filename = uploadImage($_FILES['image']);
-
-}
+//Функция чекает изменение имени файла при редактировании задачи.
+$filename = fileCheck($pdo, $fn, $_POST['id']);
+$data['img'] = $filename;
 
 //Строка для изменения записей в таблице задач
 
-function updateTask($pdo, $id, $title, $description, $filename)
+function updateTask($pdo, $table, $data)
 {
-    $sql = "UPDATE tasks SET title = :title, description = :description, img = :img WHERE id = :id";
+    $id = array_keys($data);
+    $id = $id[0]." = :".$id[0];
+    $data1 = $data;
+    unset($data['id']);
+
+    // делаем string ':title, :description, :img' (length=26)
+    $string = ":" . implode(", :", array_keys($data));
+    $string1 = ":" . implode(", :", array_keys($data1));
+
+    // делаем массив с placeholders
+    //  0 => string ':title' (length=6)
+    //  1 => string ':description' (length=12)
+    //  2 => string ':img' (length=4)
+    $string = explode(', ', $string);
+    $string1 = explode(', ', $string1);
+
+   //Делаем массив ключей
+    $keys = array_keys($data);
+    $keys1 = array_keys($data1);
+
+    //Склеиваем ключи и placeholders
+    $stringcombine = array_combine($keys, $string);
+    $stringcombine1 = array_combine($keys1, $string1);
+    $stringcombine1['img'] = $data1['img'];
+   foreach ($stringcombine as $key => $str) {
+       $stri[] = $key. " = " . $str;
+       }
+        $p = implode(", ", $stri);
+//   echo $p;
+//   var_dump($stringcombine1);
+
+    $sql = "UPDATE {$table} SET {$p} WHERE {$id}";
+    echo $sql;
     $statement = $pdo->prepare($sql);
-    $statement->bindParam(":id", $id);
-    $statement->bindParam(":title", $title);
-    $statement->bindParam(":description", $description);
-    $statement->bindParam(":img", $filename);
-    $statement->execute();
+    $result = $statement->execute($stringcombine1);
+    return $result;
 }
-updateTask($pdo, $id, $title, $description, $filename);
+updateTask($pdo, $table, $data);
+
 header('Location: list.php');
