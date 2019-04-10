@@ -86,39 +86,29 @@ function fileCheck ($pdo, $fn, $id)
     return $filename;
 }
 
-
-//Функция для редактирования данных в таске
-function updateTask($pdo, $table, $data)
+//Создаем id=:id для редактирования задачи
+function ParametersString (array $data)
 {
-    $id = array_keys($data);
-    $id = $id[0]." = :".$id[0];
-    $data1 = $data;
-    unset($data['id']);
-
-    // делаем string ':title, :description, :img' (length=26)
-    $string = ":" . implode(", :", array_keys($data));
-    $string1 = ":" . implode(", :", array_keys($data1));
-
-    // делаем массив с placeholders
-    $string = explode(', ', $string);
-    $string1 = explode(', ', $string1);
-
-    //Делаем массив ключей
+    $string = '';
     $keys = array_keys($data);
-    $keys1 = array_keys($data1);
-
-    //Склеиваем ключи и placeholders
-    $stringcombine = array_combine($keys, $string);
-    $stringcombine1 = array_combine($keys1, $data1);
-
-    //получаем строку вида
-    foreach ($stringcombine as $key => $str) {
-        $stri[] = $key. " = " . $str;
-    }
-    $p = implode(", ", $stri);
-
-    $sql = "UPDATE {$table} SET {$p} WHERE {$id}";
-    $statement = $pdo->prepare($sql);
-    $result = $statement->execute($stringcombine1);
-    return $result;
+    $string = $keys[0]. " = :".$keys[0];
+    $string = rtrim($string, ' AND ');
+    return $string;
 }
+
+//Функция для редактирования записей в таблице задач
+function updateTask ($pdo, $table, array $data)
+{
+    $keys = array_keys($data);
+    unset($keys[0]);
+    $string = '';
+    foreach ($keys as $key) {
+        $string .= $key . ' = :' . $key . ', ';
+    }
+    $keys = rtrim($string, ', ');
+    $where_string = ParametersString($data);
+    $sql = "UPDATE {$table} SET {$keys} WHERE {$where_string}";
+    $statement = $pdo->prepare($sql);
+    $statement->execute($data);
+}
+

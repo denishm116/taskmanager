@@ -3,7 +3,7 @@ session_start();
 $table = "tasks";
 $fn = $_FILES['image']['name'];
 $data = $_POST;
-
+$id = $data['id'];
 //Подключаемся к БД
 require "db_connect.php";
 require "functions.php";
@@ -12,8 +12,7 @@ require "functions.php";
 $filename = fileCheck($pdo, $fn, $_POST['id']);
 $data['img'] = $filename;
 
-//Строка для изменения записей в таблице задач
-
+//Функция для редактирования записей в таблице задач
 updateTask($pdo, $table, $data);
 
 header('Location: list.php');
